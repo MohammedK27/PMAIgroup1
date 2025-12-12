@@ -1,4 +1,6 @@
 import numpy as np
+from layers.dropout import Dropout
+
 
 class NeuralNetwork:
     def __init__(self, layers, loss_fn, optimiser):
@@ -33,6 +35,11 @@ class NeuralNetwork:
         self.backward(d_out)
 
         params, grads = self.get_params_and_grads()
+
+        # If the optimiser does not yet have parameters, give them now
+        if getattr(self.optimiser, "params", None) is None:
+            self.optimiser.params = params
+
         self.optimiser.step(grads)
 
         return loss
