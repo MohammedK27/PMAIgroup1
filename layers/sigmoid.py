@@ -11,5 +11,5 @@ class sigmoid:
 
     def backward(self, gout):
         #formula = derivative = sigmoid(x)(1-sigmoid(x))
-        return gout * self.output * (1 - self.output)
-
+        gin = gout * self.output * (1 - self.output)
+        return gin
