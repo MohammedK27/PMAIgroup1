@@ -10,6 +10,7 @@ from layers.linear import Linear
 from layers.relu import relu
 from layers.sigmoid import sigmoid
 from layers.softmax import Softmax
+import matplotlib.pyplot as plt
 
 cifar_root = r"C:\Users\User\Documents\Uni\Year_3\IN3063 Programming and Mathematics for Artificial Intelligence\PMAIgroup1\cifar-10-batches-py"
 X_train, y_train, X_test, y_test = load_data(cifar_root)
@@ -53,3 +54,40 @@ layers_sigmoid = [
     Softmax()
 ]
 hist_sigmoid = run_model("ActivationCompare_Sigmoid", layers_sigmoid)
+
+
+
+## PLOTTING GRAPHS FOR OUR RESULTS
+
+
+epochs = range(1, len(hist_relu["train_loss"]) + 1)
+
+# ---- Loss plot ----
+plt.figure()
+plt.plot(epochs, hist_relu["train_loss"], label="ReLU")
+plt.plot(epochs, hist_sigmoid["train_loss"], label="Sigmoid")
+plt.xlabel("Epoch")
+plt.ylabel("Training Loss")
+plt.title("Training Loss vs Epoch")
+plt.legend()
+plt.show()
+
+# ---- training accuracy plot ----
+plt.figure()
+plt.plot(epochs, hist_relu["train_acc"], label="ReLU")
+plt.plot(epochs, hist_sigmoid["train_acc"], label="Sigmoid")
+plt.xlabel("Epoch")
+plt.ylabel("Training Accuracy")
+plt.title("Training Accuracy vs Epoch")
+plt.legend()
+plt.show()
+
+# ---- Test accuracy plot ----
+plt.figure()
+plt.plot(epochs, hist_relu["test_acc"], label="ReLU")
+plt.plot(epochs, hist_sigmoid["test_acc"], label="Sigmoid")
+plt.xlabel("Epoch")
+plt.ylabel("Test Accuracy")
+plt.title("Test Accuracy vs Epoch")
+plt.legend()
+plt.show()
