@@ -11,6 +11,9 @@ from layers.sigmoid import sigmoid
 from layers.dropout import Dropout
 from layers.softmax import Softmax
 
+import matplotlib.pyplot as plt
+
+
 # Load CIFAR-10
 cifar_root = r"C:\Users\User\Documents\Uni\Year_3\IN3063 Programming and Mathematics for Artificial Intelligence\PMAIgroup1\cifar-10-batches-py"
 X_train, y_train, X_test, y_test = load_data(cifar_root)
@@ -56,7 +59,7 @@ layers0 = [
     Softmax()
 ]
 opt0 = SGD(lr=0.01)
-run_model("Baseline_128_ReLU", layers0, opt0)
+hist_base = run_model("Baseline_128_ReLU", layers0, opt0)
 
 # variation 1
 layers1 = [
@@ -66,7 +69,7 @@ layers1 = [
     Softmax()
 ]
 opt1 = SGD(lr=0.01)
-run_model("Wider_256_ReLU", layers1, opt1)
+hist_wide = run_model("Wider_256_ReLU", layers1, opt1)
 
 # variant 2, Dropout
 layers2 = [
@@ -77,6 +80,53 @@ layers2 = [
     Softmax()
 ]
 opt2 = SGD(lr=0.01)
-run_model("Wider_256_ReLU_Dropout0.5", layers2, opt2)
+hist_dropout = run_model("Wider_256_ReLU_Dropout0.5", layers2, opt2)
+
+
+epochs = range(1, len(hist_base["train_loss"]) + 1)
+
+
+# Training Loss vs Epoch
+
+plt.figure()
+plt.plot(epochs, hist_base["train_loss"], label="128 ReLU")
+plt.plot(epochs, hist_wide["train_loss"], label="256 ReLU")
+plt.plot(epochs, hist_dropout["train_loss"], label="256 ReLU + Dropout")
+plt.xlabel("Epoch")
+plt.ylabel("Training Loss")
+plt.title("Training Loss vs Epoch")
+plt.legend()
+plt.savefig("capacity_loss.png", dpi=200)
+plt.close()
+
+
+
+#Training accuracy vs Epoch
+plt.figure()
+plt.plot(epochs, hist_base["train_acc"], label="128 ReLU")
+plt.plot(epochs, hist_wide["train_acc"], label="256 ReLU")
+plt.plot(epochs, hist_dropout["train_acc"], label="256 ReLU + Dropout")
+plt.xlabel("Epoch")
+plt.ylabel("Training Accuracy")
+plt.title("Training Accuracy vs Epoch")
+plt.legend()
+plt.savefig("capacity_train_acc.png", dpi=200)
+plt.close()
+
+#Test Accuracy vs Epoch
+
+plt.figure()
+plt.plot(epochs, hist_base["test_acc"], label="128 ReLU")
+plt.plot(epochs, hist_wide["test_acc"], label="256 ReLU")
+plt.plot(epochs, hist_dropout["test_acc"], label="256 ReLU + Dropout")
+plt.xlabel("Epoch")
+plt.ylabel("Test Accuracy")
+plt.title("Test Accuracy vs Epoch")
+plt.legend()
+plt.savefig("capacity_test_acc.png", dpi=200)
+plt.close()
+
+
+
 
 

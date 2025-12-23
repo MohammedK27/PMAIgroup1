@@ -70,7 +70,10 @@ plt.xlabel("Epoch")
 plt.ylabel("Training Loss")
 plt.title("Training Loss vs Epoch")
 plt.legend()
-plt.show()
+#plt.show()
+plt.savefig("activation_loss.png", dpi=200)
+plt.close()
+
 
 # ---- training accuracy plot ----
 plt.figure()
@@ -80,7 +83,10 @@ plt.xlabel("Epoch")
 plt.ylabel("Training Accuracy")
 plt.title("Training Accuracy vs Epoch")
 plt.legend()
-plt.show()
+#plt.show()
+plt.savefig("activation_training_accuracy.png", dpi=200)
+plt.close()
+
 
 # ---- Test accuracy plot ----
 plt.figure()
@@ -90,4 +96,7 @@ plt.xlabel("Epoch")
 plt.ylabel("Test Accuracy")
 plt.title("Test Accuracy vs Epoch")
 plt.legend()
-plt.show()
+#plt.show()
+plt.savefig("activation_test_accuracy.png", dpi=200)
+plt.close()
+
