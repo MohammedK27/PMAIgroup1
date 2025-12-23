@@ -73,7 +73,7 @@ def training(model, loader, optimiser, lossfunc):
         #accuracy calculation
         _, predicted = torch.max(outputs, 1) #the underscore here means that that variable does not mean anything,
         #torch.max returns the index of the max into predicted, which conveniently is the same as the predicted class
-        correct += torch.sum(predicted == labels.data) #if its correct add 1 to correct, since true == 1
+        correct += (predicted == labels).sum().item() #if its correct add 1 to correct, since true == 1
         total += labels.size(0) # batch size
 
     meanloss = totalloss / len(loader)
@@ -96,7 +96,7 @@ def evaluating(model, loader, lossfunc):
             loss = lossfunc(outputs, labels)
             totalloss += loss.item()
             _, predicted = torch.max(outputs, 1)
-            correct += torch.sum(predicted == labels.data)
+            correct += (predicted == labels).sum().item()
             total += labels.size(0)
 
 
