@@ -4,19 +4,20 @@ import torch.nn as nn
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 
-class ConvolutionalNeuralNetwork(nn.Module):
+class altCNN(nn.Module):
     def __init__(self):
         super().__init__()
 
         #conv layers
         self.conv1 = nn.Conv2d(1, 32, kernel_size=3, padding=1 )
         self.conv2 = nn.Conv2d(32, 64, kernel_size=3, padding=1)
+        self.conv3 = nn.Conv2d(64, 128, kernel_size=3, padding=1)
 
         #pooling
         self.pool = nn.MaxPool2d(kernel_size=2, stride=2)
 
         #fully connected layers
-        self.fc1 = nn.Linear(64*7*7, 128)
+        self.fc1 = nn.Linear(1152, 128)
         self.fc2 = nn.Linear(128, 10)
 
         self.dropout = nn.Dropout(p=0.25)
@@ -30,9 +31,13 @@ class ConvolutionalNeuralNetwork(nn.Module):
         x = self.conv2(x)
         x = torch.relu(x)
         x = self.pool(x)
+        # conv3 layer
+        x = self.conv3(x)
+        x = torch.relu(x)
+        x = self.pool(x)
 
         #flatten
-        x = x.view(-1, 64*7*7)
+        x = x.view(-1, 1152)
         #fully connected layers
         x = self.fc1(x)
         x = torch.relu(x)
@@ -118,14 +123,6 @@ def main():
         transforms.ToTensor(),
         transforms.Normalize((0.1307,), (0.3081,))
     ])
-    #transforming only train data with augmentation
-    transformTrain = transforms.Compose([
-        transforms.RandomRotation(10), #rotate each image by +- value (degrees)
-        transforms.RandomAffine(0, translate=(0.1,0.1)), #shift each image randomly by value(percent as decimal)
-        transforms.ToTensor(),
-        transforms.Normalize((0.1307,), (0.3081,))
-    ])
-
     #get test and training data from torchvision
     trainDataset = datasets.MNIST(
         root='./data',
@@ -148,14 +145,13 @@ def main():
     testLoader = DataLoader(testDataset, batch_size=batchSize, shuffle=False)
 
     #initialising model, loss function, and optimiser
-    model = ConvolutionalNeuralNetwork()
+    model = altCNN()
     lossfunc = nn.CrossEntropyLoss()
     optimiser = torch.optim.SGD(model.parameters(), lr=0.01)
 
     #adjustments for hyperparameters eval
     #optimiser = torch.optim.SGD(model.parameters(), lr=0.001)
-    #optimiser = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
-    #optimiser = torch.optim.Adam(model.parameters(), lr=0.001)
+    #optimiser = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
 
     #variables to store results
     trainLosses = []
@@ -182,7 +178,7 @@ def main():
 
     #storing results in csv
     #IMPORTANT: When changing parameters or trying something new, CHANGE CSV NAME to an appropriate one to record results.
-    with open('original.csv', 'w', newline="") as f:
+    with open('3LayerCNN20epoch.csv', 'w', newline="") as f:
         writer = csv.writer(f)
         writer.writerow(["Epoch", "Train Loss", "Train Accuracy","Test Loss", "Test Accuracy"])
         for i in range(epochs):
