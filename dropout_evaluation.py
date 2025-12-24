@@ -10,7 +10,7 @@ from optimisers import SGD_momentum
 from dataset import load_data
 
 
-
+#load CIFAR-10 
 X_train, y_train, X_test, y_test = load_data("cifar-10-batches-py")
 
 
@@ -38,7 +38,7 @@ def build_model(optimiser, use_dropout=False):
     )
 
 
-
+#hyperparameters
 EPOCHS = 10
 BATCH_SIZE = 64
 LR = 0.01
@@ -72,7 +72,7 @@ history_do = model_do.fit(
 )
 
 
-
+#plotting graphs
 plt.figure()
 plt.plot(history_no["train_loss"], label="No Dropout")
 plt.plot(history_do["train_loss"], label="Dropout (0.5)")
