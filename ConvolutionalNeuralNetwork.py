@@ -1,8 +1,9 @@
+import matplotlib as plt
+import csv
 import torch
 import torch.nn as nn
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
-import numpy as np
 
 class ConvolutionalNeuralNetwork(nn.Module):
     def __init__(self):
@@ -110,6 +111,8 @@ def main():
 
     #seed for reproducibility
     torch.manual_seed(1)
+    #batch size
+    batchSize = 64
 
     #MNIST loading and transforming here, mean and std provided with MNIST
     transform = transforms.Compose([
@@ -134,21 +137,25 @@ def main():
     print(len(testDataset))
 
     #loading the data
-    trainLoader = DataLoader(trainDataset, batch_size=64, shuffle=True)
-    testLoader = DataLoader(testDataset, batch_size=64, shuffle=False)
+    trainLoader = DataLoader(trainDataset, batch_size=batchSize, shuffle=True)
+    testLoader = DataLoader(testDataset, batch_size=batchSize, shuffle=False)
 
     #initialising model, loss function, and optimiser
     model = ConvolutionalNeuralNetwork()
     lossfunc = nn.CrossEntropyLoss()
     optimiser = torch.optim.SGD(model.parameters(), lr=0.01)
+
     #adjustments for hyperparameters eval
     #optimiser = torch.optim.SGD(model.parameters(), lr=0.001)
     #optimiser = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
 
-
+    #variables to store results
+    trainLosses = []
+    trainAccuracies = []
+    testLosses = []
+    testAccuracies = []
 
     #running the training and evaluation loop
-
     epochs = 10
     for epoch in range(epochs):
         trainloss, trainacc = training(model, trainLoader, optimiser, lossfunc)
@@ -158,6 +165,21 @@ def main():
         print("Train Loss: ",trainloss," Train Accuracy: ",trainacc)
         print("Test Loss: ",testloss," Test Accuracy: ",testacc)
         print("")
+
+        #storing results in variables
+        trainLosses.append(trainloss)
+        trainAccuracies.append(trainacc)
+        testLosses.append(testloss)
+        testAccuracies.append(testacc)
+
+    #storing results in csv
+    #IMPORTANT: When changing parameters or trying something new, CHANGE CSV NAME to an appropriate one to record results.
+    with open('OriginalCNN.csv', 'w', newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["Epoch", "Train Loss", "Train Accuracy","Test Loss", "Test Accuracy"])
+        for i in range(epochs):
+            #format of params = epoch, trainloss, train acc, test loss, test acc
+            writer.writerow([i+1,trainLosses[i],trainAccuracies[i],testLosses[i],testAccuracies[i]])
 
 if __name__ == "__main__":
     main()
