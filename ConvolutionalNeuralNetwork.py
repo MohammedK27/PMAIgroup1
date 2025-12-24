@@ -141,6 +141,10 @@ def main():
     model = ConvolutionalNeuralNetwork()
     lossfunc = nn.CrossEntropyLoss()
     optimiser = torch.optim.SGD(model.parameters(), lr=0.01)
+    #optimiser = torch.optim.SGD(model.parameters(), lr=0.001)
+    #optimiser = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
+
+
 
     #running the training and evaluation loop
 
