@@ -12,7 +12,7 @@ from optimisers import SGD_momentum
 from dataset import load_data
 
 
- 
+#load CIFAR-10 training and test data
 X_train, y_train, X_test, y_test = load_data("cifar-10-batches-py") 
 
 
@@ -35,7 +35,7 @@ def build_model(optimiser):
         optimiser=optimiser
     )
 
-
+#hyperparameters
 EPOCHS = 10
 BATCH_SIZE = 64
 LR = 0.01
