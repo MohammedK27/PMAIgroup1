@@ -173,7 +173,7 @@ def test_training_toy():
     ]
 
     loss_fn = CrossEntropyLoss()
-    optimiser = SGD(params=None, lr=0.1)  # params set inside train_batch in your code
+    optimiser = SGD(lr=0.1)  # params set inside train_batch in your code
 
     net = NeuralNetwork(layers=layers, loss_fn=loss_fn, optimiser=optimiser)
 
