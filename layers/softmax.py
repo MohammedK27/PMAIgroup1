@@ -2,13 +2,23 @@ import numpy as np
 
 class Softmax:
     def __init__(self):
+        # Will store the output probabilities from the forward pass
+        # which will be needed later for the backward pass
+
+
         self.out = None  
 
     def forward(self, z):
         
+        # Subtract the maximum value in each row for numerical stability
+        # This prevents very large values during exponentiation
+
         z_shifted = z - np.max(z, axis=1, keepdims=True)
+
+        #apply exponential
         exp_z = np.exp(z_shifted)
         sums = np.sum(exp_z, axis=1, keepdims=True)
+        #normalisation
         self.out = exp_z / sums      
         return self.out
     
@@ -20,6 +30,8 @@ class Softmax:
         returns: dL/dz (N, C)
         """
         N, C = grad_output.shape
+        #Create an array of zeroes
+        #stores gradients with respect to logits
         grad_input = np.zeros_like(grad_output)
 
         

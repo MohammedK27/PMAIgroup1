@@ -15,13 +15,16 @@ import matplotlib.pyplot as plt
 
 
 # Load CIFAR-10
+# load training and test data
 cifar_root = r"C:\Users\User\Documents\Uni\Year_3\IN3063 Programming and Mathematics for Artificial Intelligence\PMAIgroup1\cifar-10-batches-py"
 X_train, y_train, X_test, y_test = load_data(cifar_root)
 
-# Flatten images: (N, 32, 32, 3) -> (N, 3072)
+# Flatten images: (N, 32, 32, 3) into (N, 3072)
 X_train = X_train.reshape(X_train.shape[0], -1)
 X_test = X_test.reshape(X_test.shape[0], -1)
 
+
+#make sure they are 1D arrays
 y_train = y_train.flatten()
 y_test = y_test.flatten()
 
@@ -29,6 +32,8 @@ y_test = y_test.flatten()
 input_dim = X_train.shape[1]
 num_classes = 10
 
+
+#helper funtcion to run model
 def run_model(name, layers, optimiser, epochs=20, batch_size=64):
     loss_fn = CrossEntropyLoss()
     net = NeuralNetwork(layers, loss_fn, optimiser)
@@ -80,8 +85,10 @@ hist_dropout = run_model("Wider_256_ReLU_Dropout0.5", layers2, opt2)
 
 epochs = range(1, len(hist_base["train_loss"]) + 1)
 
+##### PLOTTING GRAPHS ###
 
-# Training Loss vs Epoch
+
+# Training Loss vs Epoch 
 
 plt.figure()
 plt.plot(epochs, hist_base["train_loss"], label="128 ReLU")

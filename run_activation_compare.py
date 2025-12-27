@@ -12,10 +12,12 @@ from layers.sigmoid import sigmoid
 from layers.softmax import Softmax
 import matplotlib.pyplot as plt
 
+
+# Load CIFAR-10 dataset
 cifar_root = r"C:\Users\User\Documents\Uni\Year_3\IN3063 Programming and Mathematics for Artificial Intelligence\PMAIgroup1\cifar-10-batches-py"
 X_train, y_train, X_test, y_test = load_data(cifar_root)
 
-#temporary
+#Quick  check on shapes
 print(X_train.shape)
 print(y_train.shape)
 
@@ -23,7 +25,7 @@ print(y_train.shape)
 input_dim = X_train.shape[1] 
 num_classes = 10
 
-
+#helper function to train and evaluate a model
 def run_model(name, layers, lr=0.01, epochs=20, batch_size=64):
     net = NeuralNetwork(layers, CrossEntropyLoss(), SGD(lr))
     print("\n==============================")
@@ -59,10 +61,9 @@ hist_sigmoid = run_model("ActivationCompare_Sigmoid", layers_sigmoid)
 
 ## PLOTTING GRAPHS FOR OUR RESULTS
 
-
 epochs = range(1, len(hist_relu["train_loss"]) + 1)
 
-# ---- Loss plot ----
+# Loss plot 
 plt.figure()
 plt.plot(epochs, hist_relu["train_loss"], label="ReLU")
 plt.plot(epochs, hist_sigmoid["train_loss"], label="Sigmoid")
@@ -75,7 +76,7 @@ plt.savefig("activation_loss.png", dpi=200)
 plt.close()
 
 
-# ---- training accuracy plot ----
+#training accuracy plot
 plt.figure()
 plt.plot(epochs, hist_relu["train_acc"], label="ReLU")
 plt.plot(epochs, hist_sigmoid["train_acc"], label="Sigmoid")
@@ -88,7 +89,7 @@ plt.savefig("activation_training_accuracy.png", dpi=200)
 plt.close()
 
 
-# ---- Test accuracy plot ----
+# Test accuracy plot
 plt.figure()
 plt.plot(epochs, hist_relu["test_acc"], label="ReLU")
 plt.plot(epochs, hist_sigmoid["test_acc"], label="Sigmoid")
