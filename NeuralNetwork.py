@@ -4,6 +4,7 @@ from layers.dropout import Dropout
 
 class NeuralNetwork:
     def __init__(self, layers, loss_fn, optimiser):
+        #store network components 
         self.layers = layers
         self.loss_fn = loss_fn
         self.optimiser = optimiser
@@ -11,6 +12,7 @@ class NeuralNetwork:
   
     def forward(self, x, training=True):
         for layer in self.layers:
+            #enable/diable dropout depending on training mode 
             if isinstance(layer, Dropout):
                 layer.training = training
             x = layer.forward(x)
@@ -18,10 +20,12 @@ class NeuralNetwork:
 
 
     def backward(self, d_out):
+        #backpropogate gradients through layers
         for layer in reversed(self.layers):
             d_out = layer.backward(d_out)
 
     def get_params_and_grads(self):
+        #get trainable params and their grads
         params, grads = [], []
         for layer in self.layers:
             if hasattr(layer, "W"):
@@ -29,6 +33,7 @@ class NeuralNetwork:
                 grads += [layer.dW, layer.db]
         return params, grads
 
+    #train 
     def train_batch(self, x, y):
         probs = self.forward(x, training=True)
         loss, d_out = self.loss_fn.forward(probs, y)
@@ -46,28 +51,34 @@ class NeuralNetwork:
 
 
     def predict(self, x):
+        #predict class labels
         probs = self.forward(x, training=False)
         return np.argmax(probs, axis=1)
 
     def accuracy(self, x, y):
+        #calc classification accuracy
         preds = self.predict(x)
         return np.mean(preds == y)
 
     def fit(self, X_train, y_train, X_test, y_test, epochs=20, batch_size=64):
+        #train for 20 epochs 
         n = X_train.shape[0]
         history = {"train_loss": [], "train_acc": [], "test_acc": []}
 
         for epoch in range(epochs):
+            #shuffle the training data 
             idx = np.random.permutation(n)
             X_train, y_train = X_train[idx], y_train[idx]
 
             losses = []
             for i in range(0, n, batch_size):
+                #mini-batch training
                 xb = X_train[i:i+batch_size]
                 yb = y_train[i:i+batch_size]
                 loss = self.train_batch(xb, yb)
                 losses.append(loss)
-
+                
+            #check performance after each epoch
             train_acc = self.accuracy(X_train, y_train)
             test_acc = self.accuracy(X_test, y_test)
 
